@@ -23,37 +23,40 @@
   <!-- ============ CURSOR ============ -->
   <div class="cursor" aria-hidden="true"><div class="cursor__dot"></div><div class="cursor__ring"><span class="cursor__label"></span></div></div>
 
+  <canvas class="scene" aria-hidden="true"></canvas>
+  <div class="scene-fade" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
   <!-- ============ NAV ============ -->
   <header class="nav">
-    <a href="#top" class="nav__logo" data-link data-magnetic>S<em>K</em></a>
-    <nav class="nav__links">
+    <a href="#top" class="nav__logo" data-link data-magnetic>S<span>K</span></a>
+    <nav class="nav__pill glass" data-spot>
+      <span class="nav__indicator"></span>
       <a href="#about" data-link>About</a>
       <a href="#expertise" data-link>Expertise</a>
       <a href="#journey" data-link>Journey</a>
       <a href="#experience" data-link>Experience</a>
     </nav>
-    <div class="nav__meta mono"><span class="pulse"></span> Hamburg <span class="js-clock">--:--</span></div>
-    <a href="#contact" class="nav__cta" data-magnetic data-cursor="Say hi"><span>Contact</span></a>
+    <div class="nav__right">
+      <div class="nav__meta mono"><span class="pulse"></span> Open to talk · <span class="js-clock">--:--</span> CET</div>
+      <a href="#contact" class="nav__cta" data-magnetic data-cursor="Say hi"><span>Contact</span></a>
+    </div>
   </header>
 
   <main id="top">
 
     <!-- ============ HERO ============ -->
-    <section class="hero">
-      <canvas class="hero__gl" aria-hidden="true"></canvas>
-      <div class="hero__vignette" aria-hidden="true"></div>
+    <section class="hero" data-shape="0">
 
       <div class="hero__top mono">
-        <span class="js-hero-fade">Retail Media &amp; Programmatic Lead</span>
-        <span class="js-hero-fade">Principal Performance Manager · Front Row</span>
-        <span class="js-hero-fade">Hamburg · 53.55°N 9.99°E</span>
+        <span class="chip glass js-hero-fade"><i class="pulse"></i><span class="js-decode">Principal Performance Manager · Front Row</span></span>
+        <span class="js-hero-fade js-decode">Retail Media &amp; Programmatic Lead</span>
+        <span class="js-hero-fade js-decode">Hamburg · 53.55°N 9.99°E</span>
       </div>
 
       <h1 class="hero__title" aria-label="Sergii Kniaziev">
         <span class="hero__line"><span class="js-split-hero">Sergii</span></span>
-        <span class="hero__line hero__line--indent"><em class="js-split-hero">Kniaziev</em></span>
+        <span class="hero__line hero__line--indent"><span class="js-split-hero hero__outline">Kniaziev</span></span>
       </h1>
 
       <div class="hero__bottom">
@@ -82,8 +85,8 @@
     </section>
 
     <!-- ============ ABOUT ============ -->
-    <section class="about" id="about">
-      <div class="section-label mono"><span>01</span> About</div>
+    <section class="about" id="about" data-shape="1">
+      <div class="section-label mono js-decode"><span>01</span> About</div>
       <p class="about__text js-scrub-text">
         I've seen retail media from every seat at the table: running operations inside Amazon,
         building an agency's Amazon practice as employee number one, steering global programmatic
@@ -111,7 +114,7 @@
       </div>
 
       <!-- ecosystem ring -->
-      <div class="eco js-eco">
+      <div class="eco glass js-eco">
         <div class="eco__item" data-cursor="2017–2020"><span class="mono">Retailer</span><strong>Amazon</strong></div>
         <div class="eco__item" data-cursor="2023–2025"><span class="mono">Adtech</span><strong>Quantcast</strong></div>
         <div class="eco__item" data-cursor="2020–Now"><span class="mono">Agency</span><strong>Front Row · Kinesso · Amerge</strong></div>
@@ -120,15 +123,15 @@
     </section>
 
     <!-- ============ EXPERTISE (horizontal) ============ -->
-    <section class="expertise" id="expertise">
+    <section class="expertise" id="expertise" data-shape="2">
       <div class="expertise__pin">
         <div class="expertise__head">
-          <div class="section-label mono"><span>02</span> Expertise</div>
+          <div class="section-label mono js-decode"><span>02</span> Expertise</div>
           <h2 class="h2 js-split-h2">Strategy, data <em>and</em> the machine behind it</h2>
           <div class="expertise__progress"><i class="js-hprogress"></i></div>
         </div>
         <div class="expertise__track js-htrack">
-          <article class="card">
+          <article class="card glass">
             <div class="card__glow"></div>
             <div class="card__index mono">01</div>
             <div class="card__icon"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20"/><circle cx="24" cy="24" r="12"/><circle cx="24" cy="24" r="4"/></svg></div>
@@ -136,7 +139,7 @@
             <p>Full-funnel retail media for consumer electronics brands across European markets — multi-million budgets planned against business KPIs, not just delivery metrics.</p>
             <ul class="tags mono"><li>Amazon DSP</li><li>Walmart DSP</li><li>The Trade Desk</li></ul>
           </article>
-          <article class="card">
+          <article class="card glass">
             <div class="card__glow"></div>
             <div class="card__index mono">02</div>
             <div class="card__icon"><svg viewBox="0 0 48 48"><path d="M8 36 L18 22 L26 30 L40 12"/><path d="M8 40 H40"/></svg></div>
@@ -144,7 +147,7 @@
             <p>Custom SQL in Amazon Marketing Cloud across campaign, conversion and path-to-purchase signals — proving incremental value and steering investment.</p>
             <ul class="tags mono"><li>AMC</li><li>SQL</li><li>Python</li><li>Snowflake</li></ul>
           </article>
-          <article class="card">
+          <article class="card glass">
             <div class="card__glow"></div>
             <div class="card__index mono">03</div>
             <div class="card__icon"><svg viewBox="0 0 48 48"><rect x="8" y="8" width="32" height="32" rx="6"/><path d="M16 24 H32 M24 16 V32"/><circle cx="24" cy="24" r="4"/></svg></div>
@@ -152,7 +155,7 @@
             <p>Owner of the agency's DSP backstage tool — campaign creation and optimisation automated via API. Plus automated reporting and AI agents that cut manual work.</p>
             <ul class="tags mono"><li>API</li><li>AI agents</li><li>Reporting</li></ul>
           </article>
-          <article class="card">
+          <article class="card glass">
             <div class="card__glow"></div>
             <div class="card__index mono">04</div>
             <div class="card__icon"><svg viewBox="0 0 48 48"><circle cx="24" cy="14" r="6"/><circle cx="10" cy="34" r="5"/><circle cx="38" cy="34" r="5"/><path d="M20 19 L13 30 M28 19 L35 30 M15 34 H33"/></svg></div>
@@ -160,7 +163,7 @@
             <p>DSP Service Lead and Tier-1 Account Lead. Previously led a team of 4 and steered 3 agencies across 12 markets in North America, EMEA and LATAM.</p>
             <ul class="tags mono"><li>Coaching</li><li>Agency steering</li><li>Audits</li></ul>
           </article>
-          <article class="card">
+          <article class="card glass">
             <div class="card__glow"></div>
             <div class="card__index mono">05</div>
             <div class="card__icon"><svg viewBox="0 0 48 48"><path d="M24 6 C14 6 8 13 8 22 C8 34 24 42 24 42 C24 42 40 34 40 22 C40 13 34 6 24 6 Z"/><circle cx="24" cy="21" r="6"/></svg></div>
@@ -168,7 +171,7 @@
             <p>Amazon Ad Tags implementation, first-party pixel data and 1P CRM audience creation — giving clients the data foundation that retail media runs on.</p>
             <ul class="tags mono"><li>Ad Tags</li><li>1P data</li><li>CRM audiences</li></ul>
           </article>
-          <article class="card">
+          <article class="card glass">
             <div class="card__glow"></div>
             <div class="card__index mono">06</div>
             <div class="card__icon"><svg viewBox="0 0 48 48"><rect x="6" y="10" width="36" height="24" rx="3"/><path d="M18 40 H30"/><path d="M21 18 L29 22 L21 26 Z"/></svg></div>
@@ -181,8 +184,8 @@
     </section>
 
     <!-- ============ METHOD (diagram) ============ -->
-    <section class="method" id="method">
-      <div class="section-label mono"><span>03</span> Method</div>
+    <section class="method" id="method" data-shape="3">
+      <div class="section-label mono js-decode"><span>03</span> Method</div>
       <h2 class="h2 js-split-h2">From scattered signals <br />to <em>proven value</em></h2>
 
       <div class="method__grid">
@@ -190,12 +193,12 @@
           <svg viewBox="0 0 800 520" class="diagram__svg" aria-label="Campaign, conversion, path-to-purchase and first-party CRM signals flow into the Amazon Marketing Cloud clean room, producing incrementality, budget and audience decisions.">
             <defs>
               <linearGradient id="flow" x1="0" x2="1">
-                <stop offset="0" stop-color="#8a867f" />
-                <stop offset="1" stop-color="#ff6a2b" />
+                <stop offset="0" stop-color="#5b5873" />
+                <stop offset="1" stop-color="#7cf7ff" />
               </linearGradient>
               <radialGradient id="core">
-                <stop offset="0" stop-color="#ff6a2b" stop-opacity=".55" />
-                <stop offset="1" stop-color="#ff6a2b" stop-opacity="0" />
+                <stop offset="0" stop-color="#a594ff" stop-opacity=".5" />
+                <stop offset="1" stop-color="#a594ff" stop-opacity="0" />
               </radialGradient>
             </defs>
 
@@ -246,10 +249,10 @@
     </section>
 
     <!-- ============ JOURNEY (map) ============ -->
-    <section class="journey" id="journey">
+    <section class="journey" id="journey" data-shape="4">
       <div class="journey__pin">
         <div class="journey__head">
-          <div class="section-label mono"><span>04</span> Journey</div>
+          <div class="section-label mono js-decode"><span>04</span> Journey</div>
           <h2 class="h2 js-split-h2">Five cities, <em>one craft</em></h2>
         </div>
         <div class="journey__map">
@@ -271,9 +274,9 @@
 
     <!-- ============ FEATURE QUOTE ============ -->
     <section class="feature">
-      <div class="feature__inner">
-        <div class="section-label mono"><span>05</span> Featured</div>
-        <div class="feature__badge mono">#TipDrop · Front Row Germany expert spotlight</div>
+      <div class="feature__inner glass">
+        <div class="section-label mono js-decode"><span>05</span> Featured</div>
+        <div class="feature__badge mono js-decode">#TipDrop · Front Row Germany expert spotlight</div>
         <blockquote class="feature__quote js-split-quote">
           “Linking DSP, CTV and Sponsored Ads into <em>one audience story</em> — and using AMC to make cross-channel impact visible.”
         </blockquote>
@@ -282,8 +285,8 @@
     </section>
 
     <!-- ============ EXPERIENCE ============ -->
-    <section class="experience" id="experience">
-      <div class="section-label mono"><span>06</span> Experience</div>
+    <section class="experience" id="experience" data-shape="5">
+      <div class="section-label mono js-decode"><span>06</span> Experience</div>
       <h2 class="h2 js-split-h2">Where the <em>work</em> happened</h2>
 
       <div class="jobs js-jobs">
@@ -366,22 +369,22 @@
       </div>
 
       <div class="bento">
-        <div class="bento__item bento__item--wide js-reveal" data-spot>
+        <div class="glass bento__item bento__item--wide js-reveal" data-spot>
           <span class="mono">Toolkit · Retail media</span>
           <h4>Amazon DSP, Walmart DSP, AMC</h4>
           <p>Sponsored Products &amp; Brands, programmatic display, A+ Content &amp; Brand Stores, retailer 1P data &amp; clean rooms, PACVUE.</p>
         </div>
-        <div class="bento__item js-reveal" data-spot>
+        <div class="glass bento__item js-reveal" data-spot>
           <span class="mono">Toolkit · Data</span>
           <h4>SQL · Python</h4>
           <p>Snowflake, automated reporting, AI agent development, advanced Excel.</p>
         </div>
-        <div class="bento__item js-reveal" data-spot>
+        <div class="glass bento__item js-reveal" data-spot>
           <span class="mono">Languages</span>
           <h4>EN · UA · RU · DE</h4>
           <p>English fluent, Ukrainian &amp; Russian native, German actively learning.</p>
         </div>
-        <div class="bento__item bento__item--wide js-reveal" data-spot>
+        <div class="glass bento__item bento__item--wide js-reveal" data-spot>
           <span class="mono">Learning</span>
           <h4>Stanford &amp; Lean Startup Machine</h4>
           <p>Stanford University Creativity Course (2012) · Lean Startup Machine (2013).</p>
@@ -390,9 +393,9 @@
     </section>
 
     <!-- ============ CONTACT ============ -->
-    <section class="contact" id="contact">
+    <section class="contact" id="contact" data-shape="6">
       <div class="contact__glow" aria-hidden="true"></div>
-      <div class="section-label mono"><span>07</span> Contact</div>
+      <div class="section-label mono js-decode"><span>07</span> Contact</div>
       <h2 class="contact__title">
         <span class="contact__line"><span class="js-split-contact">Let's make retail</span></span>
         <span class="contact__line"><em class="js-split-contact">media measurable.</em></span>
@@ -402,7 +405,7 @@
           <span class="btn-big__fill"></span>
           <span class="btn-big__text">sergyknazeff@icloud.com</span>
         </a>
-        <a class="btn-big btn-big--ghost" href="https://de.linkedin.com/in/sergyknazeff" target="_blank" rel="noopener" data-magnetic data-cursor="Open">
+        <a class="btn-big btn-big--ghost glass" href="https://de.linkedin.com/in/sergyknazeff" target="_blank" rel="noopener" data-magnetic data-cursor="Open">
           <span class="btn-big__fill"></span>
           <span class="btn-big__text">LinkedIn ↗</span>
         </a>

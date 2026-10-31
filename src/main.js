@@ -5,7 +5,7 @@ import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import Lenis from 'lenis';
-import { initHeroGL } from './hero-gl.js';
+import { initScene } from './scene.js';
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin, MotionPathPlugin);
 
@@ -40,8 +40,63 @@ const tick = () => {
 };
 tick(); setInterval(tick, 15000);
 
-/* ---------------- WebGL hero ---------------- */
-const gl = initHeroGL($('.hero__gl'));
+/* ---------------- particle scene ---------------- */
+const scene = initScene($('.scene'));
+const mobile = window.matchMedia('(max-width: 860px)').matches;
+// where the cloud sits for each chapter: [x, y, scale, alpha]
+const PLACE = mobile
+  ? [[0, 0.9, 0.85, 0.9], [0, 0, 0.8, 0.45], [0, 0.3, 0.75, 0.5], [0, 0, 0.8, 0.5], [0, 0, 0.7, 0.55], [0, -0.8, 0.8, 0.45], [0, -1.6, 0.6, 0.9]]
+  : [[1.75, 0.15, 1, 1], [2.0, 0, 0.85, 0.75], [2.3, 0.75, 0.62, 0.8], [-1.7, -0.6, 0.55, 0.7], [0, -1.75, 1.1, 0.4], [0, -1.5, 1.05, 0.55], [2.3, -1.1, 0.8, 0.5]];
+
+function goToShape(i) {
+  if (!scene) return;
+  const [x, y, sc, a] = PLACE[i];
+  gsap.to(scene.uniforms.uShape, { value: i, duration: 2.2, ease: 'power3.inOut', overwrite: true });
+  gsap.to(scene.group.position, { x, y, duration: 2.4, ease: 'power3.inOut', overwrite: true });
+  gsap.to(scene.group.scale, { x: sc, y: sc, z: sc, duration: 2.4, ease: 'power3.inOut', overwrite: true });
+  gsap.to(scene.uniforms.uAlpha, { value: a, duration: 1.6, overwrite: true });
+}
+if (scene) gsap.set(scene.group.position, { x: PLACE[0][0], y: PLACE[0][1] });
+
+/* ---------------- decode text effect ---------------- */
+const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&/+=<>';
+function decode(el, duration = 0.9) {
+  const nodes = [];
+  const walk = (n) => n.childNodes.forEach((c) => (c.nodeType === 3 ? c.textContent.trim() && nodes.push(c) : walk(c)));
+  walk(el);
+  nodes.forEach((node) => {
+    const final = node.__final || (node.__final = node.textContent);
+    const o = { p: 0 };
+    gsap.to(o, {
+      p: 1, duration, ease: 'power2.out',
+      onUpdate: () => {
+        const n = Math.floor(o.p * final.length);
+        let out = final.slice(0, n);
+        for (let i = n; i < final.length; i++) out += final[i] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        node.textContent = out;
+      },
+      onComplete: () => { node.textContent = final; },
+    });
+  });
+}
+
+/* ---------------- kinetic variable-weight type ---------------- */
+function kinetic(chars, { min = 300, max = 800, radius = 280 } = {}) {
+  if (!finePointer || reduced) return;
+  const mouse = { x: -9999, y: -9999 };
+  const cur = chars.map(() => min);
+  window.addEventListener('pointermove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  gsap.ticker.add(() => {
+    if (window.scrollY > innerHeight * 1.2) return;
+    chars.forEach((c, i) => {
+      const r = c.getBoundingClientRect();
+      const d = Math.hypot(mouse.x - (r.left + r.width / 2), mouse.y - (r.top + r.height / 2));
+      const target = min + (max - min) * Math.pow(Math.max(0, 1 - d / radius), 1.5);
+      cur[i] += (target - cur[i]) * 0.12;
+      c.style.setProperty('--w', cur[i].toFixed(0));
+    });
+  });
+}
 
 /* ---------------- cursor ---------------- */
 if (finePointer) {
@@ -78,7 +133,7 @@ if (finePointer) {
   });
 
   /* spotlight + 3D tilt on cards */
-  $$('.card, [data-spot], .job').forEach((el) => {
+  $$('.card, [data-spot], .job, .glass').forEach((el) => {
     const isCard = el.classList.contains('card');
     el.addEventListener('pointermove', (e) => {
       const r = el.getBoundingClientRect();
@@ -110,28 +165,55 @@ function runLoader() {
 
 function heroIntro() {
   const split = SplitText.create('.js-split-hero', { type: 'chars', charsClass: 'char' });
+  $$('.hero__outline .char').forEach((c, i) => c.style.setProperty('--i', i));
   const tl = gsap.timeline();
-  tl.to({ v: 0 }, { v: 1, duration: 2.6, ease: 'power2.out', onUpdate() { gl.setIntro(this.targets()[0].v); } }, 0)
-    .from(split.chars, { yPercent: 115, rotate: 8, duration: 1.4, ease: 'expo.out', stagger: 0.035 }, 0.1)
+  if (scene) tl.fromTo(scene.uniforms.uAlpha, { value: 0 }, { value: 1, duration: 2.4, ease: 'power2.out' }, 0)
+    .fromTo(scene.uniforms.uShape, { value: 0.6 }, { value: 0, duration: 3, ease: 'expo.out' }, 0);
+  tl.from(split.chars, { yPercent: 115, filter: 'blur(12px)', '--w': 100, duration: 1.6, ease: 'expo.out', stagger: 0.04, clearProps: 'filter' }, 0.1)
+    .add(() => $$('.hero .js-decode').forEach((el) => decode(el, 1.2)), 0.6)
     .from('.js-hero-fade', { y: 24, autoAlpha: 0, duration: 1.1, ease: 'power3.out', stagger: 0.08 }, 0.6)
     .from('.nav > *', { y: -20, autoAlpha: 0, duration: 1, ease: 'power3.out', stagger: 0.06 }, 0.7);
 
-  // hover wave on hero letters
-  if (finePointer) {
-    split.chars.forEach((c) => c.addEventListener('pointerenter', () => {
-      gsap.fromTo(c, { yPercent: 0 }, { yPercent: -14, duration: 0.25, ease: 'power2.out', yoyo: true, repeat: 1 });
-    }));
-  }
+  tl.add(() => kinetic(split.chars), 1.4);
   return tl;
 }
 
 /* ---------------- scroll animations ---------------- */
 function initScroll() {
-  // hero parallax + shader dissolve
-  ScrollTrigger.create({
-    trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true,
-    onUpdate: (s) => gl.setScroll(s.progress),
+  // particle chapters: each [data-shape] section morphs the cloud
+  $$('[data-shape]').forEach((sec) => {
+    const i = +sec.dataset.shape;
+    ScrollTrigger.create({
+      trigger: sec, start: 'top 55%', end: 'bottom 55%',
+      onEnter: () => goToShape(i), onEnterBack: () => goToShape(i),
+    });
   });
+  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: (s) => scene && scene.nudge(Math.abs(s.getVelocity()) / 60) });
+
+  // decode labels on enter
+  $$('.js-decode').filter((el) => !el.closest('.hero')).forEach((el) => {
+    ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: () => decode(el) });
+  });
+
+  // nav pill: active section + sliding indicator
+  const pill = $('.nav__pill'), ind = $('.nav__indicator');
+  const moveInd = (a) => {
+    if (!a) { gsap.to(ind, { opacity: 0, duration: 0.3 }); return; }
+    gsap.to(ind, { x: a.offsetLeft, width: a.offsetWidth, opacity: 1, duration: 0.6, ease: 'expo.out' });
+  };
+  let activeLink = null;
+  $$('.nav__pill a').forEach((a) => {
+    a.addEventListener('pointerenter', () => moveInd(a));
+    const sec = $(a.getAttribute('href'));
+    ScrollTrigger.create({
+      trigger: sec, start: 'top 50%', end: 'bottom 50%',
+      onToggle: (st) => {
+        a.classList.toggle('is-active', st.isActive);
+        if (st.isActive) { activeLink = a; moveInd(a); } else if (activeLink === a) { activeLink = null; moveInd(null); }
+      },
+    });
+  });
+  pill.addEventListener('pointerleave', () => moveInd(activeLink));
   gsap.to('.hero__title', { yPercent: 35, scale: 0.92, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.hero__bottom, .hero__top', { autoAlpha: 0, y: -40, ease: 'none', scrollTrigger: { trigger: '.hero', start: '30% top', end: '70% top', scrub: true } });
 
@@ -179,7 +261,10 @@ function initScroll() {
     gsap.to(o, {
       v: to, duration: 2.2, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 85%' },
-      onUpdate: () => { el.textContent = String(Math.round(o.v)).padStart(to < 10 ? 2 : 1, '0'); },
+      onUpdate: () => {
+        el.textContent = String(Math.round(o.v)).padStart(to < 10 ? 2 : 1, '0');
+        el.parentElement.style.setProperty('--w', (100 + 500 * (o.v / to)).toFixed(0));
+      },
     });
   });
 
