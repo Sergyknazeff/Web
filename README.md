@@ -29,19 +29,15 @@ DSP/CTV/Sponsored Ads/Organic → AMC → Budget/Creative/Strategy с бегущ
 
 ## Откуда контент
 
-LinkedIn-профиль напрямую из среды сборки был недоступен, поэтому контент собран из открытых источников:
+Основной источник — CV (Retail Media & Programmatic Lead): все роли, даты, цифры
+(9+ лет, 12 рынков, 3 агентства, команда из 4, 2 из топ-5 глобальных клиентов) и навыки взяты оттуда.
+Дополнительно из открытых источников — публикация Front Row Germany **#TipDrop**.
+Выдуманных метрик на сайте нет.
 
-- Senior Performance Manager, Front Row Germany, Hamburg
-- Публикация Front Row Germany в серии **#TipDrop**: связка DSP, CTV и Sponsored Ads в одну
-  audience story, AMC для видимости кросс-канального эффекта, платформа CATAPULT, 360° brand view
-- Профильная экспертиза: Amazon DSP, AMC, reporting, campaign structure, strategic planning
+## Структура
 
-Выдуманных цифр (ROAS, бюджеты, годы) на сайте нет. Счётчики в блоке About отражают
-метод, а не результаты.
+Hero → платформы (бегущая строка) → About + 4 стороны экосистемы → Expertise (горизонтальный скролл)
+→ Method (схема AMC clean room) → Journey (маршрут Bratislava → London → Frankfurt → Toronto → Hamburg)
+→ #TipDrop → Experience (6 ролей, таймлайн) → Toolkit / языки / обучение → Contact.
 
-## Что дописать (весь текст — в `index.html`)
-
-- Блок **Experience**: прошлые роли (продублировать `<article class="job">`)
-- Реальные подтверждённые результаты, если их можно публиковать (заменить/добавить `.stat`)
-- Email или другой контакт в блоке **Contact**
-- Фото, при желании
+Весь текст — в `index.html`.

@@ -78,7 +78,7 @@ if (finePointer) {
   });
 
   /* spotlight + 3D tilt on cards */
-  $$('.card, [data-spot]').forEach((el) => {
+  $$('.card, [data-spot], .job').forEach((el) => {
     const isCard = el.classList.contains('card');
     el.addEventListener('pointermove', (e) => {
       const r = el.getBoundingClientRect();
@@ -240,12 +240,50 @@ function initScroll() {
     gsap.from(el, { x: 40, autoAlpha: 0, duration: 1, ease: 'expo.out', delay: i * 0.08, scrollTrigger: { trigger: el, start: 'top 88%' } });
   });
 
+  // journey: pinned path draw with a travelling marker and city stops
+  mm.add('(min-width: 861px)', () => {
+    const path = $('.js-jpath');
+    const stops = $$('.js-stop');
+    const marks = [0.0, 0.25, 0.47, 0.7, 0.995];
+    const len = path.getTotalLength();
+    stops.forEach((el, i) => {
+      const pt = path.getPointAtLength(len * marks[i]);
+      el.style.setProperty('--x', `${(pt.x / 1400) * 100}%`);
+      el.style.setProperty('--y', `${(pt.y / 420) * 100}%`);
+    });
+    gsap.set(stops, { autoAlpha: 0, y: 20 });
+    gsap.set(path, { drawSVG: 0 });
+    const shown = new Set();
+    const tl = gsap.timeline({
+      onUpdate: () => {
+        const p = tl.progress();
+        stops.forEach((el, i) => {
+          const on = p >= marks[i] - 0.01;
+          if (on && !shown.has(i)) { shown.add(i); gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'expo.out', overwrite: true }); }
+          if (!on && shown.has(i)) { shown.delete(i); gsap.to(el, { autoAlpha: 0, y: 20, duration: 0.4, overwrite: true }); }
+        });
+      },
+      scrollTrigger: { trigger: '.journey', pin: '.journey__pin', start: 'top top', end: '+=180%', scrub: 1 },
+    });
+    tl.to(path, { drawSVG: '100%', ease: 'none', duration: 1 }, 0)
+      .to('.js-jplane', { ease: 'none', duration: 1, motionPath: { path, align: path, alignOrigin: [0.5, 0.5] } }, 0);
+  });
+  mm.add('(max-width: 860px)', () => {
+    $$('.js-stop').forEach((el) => gsap.from(el, { x: 30, autoAlpha: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 90%' } }));
+  });
+
+  // ecosystem strip: sweeping light + staggered entry
+  gsap.from('.eco__item', { y: 30, autoAlpha: 0, duration: 1, ease: 'expo.out', stagger: 0.1, scrollTrigger: { trigger: '.js-eco', start: 'top 88%' } });
+  gsap.fromTo('.js-eco', { '--sweep': '-100%' }, { '--sweep': '260%', duration: 3.2, ease: 'power2.inOut', repeat: -1, repeatDelay: 1.2 });
+
   // feature card: scale-in + parallax glow
   gsap.from('.feature__inner', { scale: 0.9, borderRadius: 80, autoAlpha: 0.4, ease: 'none', scrollTrigger: { trigger: '.feature', start: 'top bottom', end: 'top 30%', scrub: true } });
 
-  // jobs
+  // jobs: rail fills with scroll, nodes light up as each role passes
+  gsap.to('.js-jobs-rail', { scaleY: 1, ease: 'none', scrollTrigger: { trigger: '.js-jobs', start: 'top 60%', end: 'bottom 60%', scrub: true } });
   $$('.js-job').forEach((el) => {
-    gsap.from(el, { y: 50, autoAlpha: 0, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
+    gsap.from(el.children, { y: 40, autoAlpha: 0, duration: 1.1, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: el, start: 'top 88%' } });
+    ScrollTrigger.create({ trigger: el, start: 'top 60%', end: 'bottom 60%', toggleClass: 'is-active' });
   });
 
   // contact
@@ -274,5 +312,6 @@ function initScroll() {
   heroIntro();
   initScroll();
   lenis.start();
+  ScrollTrigger.sort();
   ScrollTrigger.refresh();
 })();
