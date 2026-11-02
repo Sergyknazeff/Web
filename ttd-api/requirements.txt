@@ -1,0 +1,3 @@
+requests>=2.31
+# optional: reports -> DataFrame
+pandas>=2.0
